@@ -111,7 +111,7 @@ class TohEnv(discrete.DiscreteEnv):
                         li.append((1, self.inverse_mapping[new_state], rew, done))
                     else:
                         for b in [(a, 1-noise), (random.choice(range(6)), noise)]:
-                            a, prob = b[0], b[i]
+                            a, prob = b[0], b[1]
                             done = False
                             new_state = self.apply_action(
                                 self.state_mapping[s], self.action_list[a])
