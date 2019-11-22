@@ -3,7 +3,7 @@ Open AI Gym discrete environment for Tower of Hanoi problem
 
 The latest version can be installed using pip:
 `
-pip install -e git+git://github.com/xadahiya/toh-gym#egg=gym-toh-xadahiya
+pip install -e git+git://github.com/xadahiya/toh-gym#egg=toh-gym
 `
 
 
