@@ -34,7 +34,6 @@ class TohEnv(discrete.DiscreteEnv):
         output = tuple([tuple(i) for i in new_state])
         return output
 
-
     def is_state_valid(self, s):
         """Checks if a state is valid."""
         s = [list(i) for i in s]
@@ -42,7 +41,6 @@ class TohEnv(discrete.DiscreteEnv):
             if i != sorted(i, reverse=True):
                 return False
         return True
-
 
     def generate_all_states(self, initial_state):
         """Generate all the states for MDP, total number of states = number_of_poles**number_of_disks"""
@@ -67,9 +65,9 @@ class TohEnv(discrete.DiscreteEnv):
         self.initial_state = initial_state
         assert noise < 1.0, "noise must be between 0 and 1"
         self.goal_state = goal_state
-        
+
         self.action_list = [(0, 1), (0, 2), (1, 0),
-                       (1, 2), (2, 0), (2, 1)]
+                            (1, 2), (2, 0), (2, 1)]
 
         self.all_states = self.generate_all_states(initial_state)
 
@@ -86,7 +84,7 @@ class TohEnv(discrete.DiscreteEnv):
 
         ## Generating probability matrix
         self.P = {s: {a: [] for a in range(len(self.action_list))}
-            for s in range(len(self.all_states))}
+                  for s in range(len(self.all_states))}
 
         # For stochastic environment
         self.noise = noise
@@ -98,20 +96,23 @@ class TohEnv(discrete.DiscreteEnv):
                 else:
                     if noise == 0:
                         done = False
-                        new_state = self.apply_action(self.state_mapping[s], self.action_list[a])
+                        new_state = self.apply_action(
+                            self.state_mapping[s], self.action_list[a])
                         rew = 0
                         if new_state == None:
                             new_state = self.state_mapping[s]
                         if self.is_state_valid(new_state) == False:
                             new_state = self.state_mapping[s]
                             done = True
+                            rew = -10
                         if new_state == self.goal_state:
                             rew = 100
                             done = True
-                        li.append((1, self.inverse_mapping[new_state], rew, done))
+                        li.append(
+                            (1, self.inverse_mapping[new_state], rew, done))
                     else:
                         for b in [(a, 1-noise), (random.choice(range(6)), noise)]:
-                            a, prob = b[0], b[i]
+                            a, prob = b[0], b[1]
                             done = False
                             new_state = self.apply_action(
                                 self.state_mapping[s], self.action_list[a])
@@ -120,6 +121,7 @@ class TohEnv(discrete.DiscreteEnv):
                                 new_state = self.state_mapping[s]
                             if self.is_state_valid(new_state) == False:
                                 new_state = self.state_mapping[s]
+                                rew = -10
                                 done = True
                             if new_state == self.goal_state:
                                 rew = 100
@@ -127,12 +129,8 @@ class TohEnv(discrete.DiscreteEnv):
                             li.append(
                                 (prob, self.inverse_mapping[new_state], rew, done))
 
-
-
-
-
         self.isd = np.array([self.is_state_valid(self.state_mapping[s])
-                        for s in range(len(self.all_states))]).astype('float').ravel()
+                             for s in range(len(self.all_states))]).astype('float').ravel()
         self.isd /= self.isd.sum()
-        
+
         super(TohEnv, self).__init__(self.nS, self.nA, self.P, self.isd)
