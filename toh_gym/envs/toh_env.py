@@ -65,6 +65,7 @@ class TohEnv(discrete.DiscreteEnv):
     def __init__(self, initial_state=((2, 1, 0), (), ()), goal_state=((), (), (2, 1, 0)), noise=0):
 
         self.initial_state = initial_state
+        assert noise < 1.0, "noise must be between 0 and 1"
         self.goal_state = goal_state
         
         self.action_list = [(0, 1), (0, 2), (1, 0),
@@ -95,21 +96,39 @@ class TohEnv(discrete.DiscreteEnv):
                 if self.state_mapping[s] == self.goal_state:
                     li.append((1, s, 0, True))
                 else:
-                    test = random.random()
-                    if test < noise:
-                        a = random.choice(range(6))
-                    done = False
-                    new_state = self.apply_action(self.state_mapping[s], self.action_list[a])
-                    rew = 0
-                    if new_state == None:
-                        new_state = self.state_mapping[s]
-                    if self.is_state_valid(new_state) == False:
-                        new_state = self.state_mapping[s]
-                        done = True
-                    if new_state == self.goal_state:
-                        rew = 100
-                        done = True
-                    li.append((1, self.inverse_mapping[new_state], rew, done))
+                    if noise == 0:
+                        done = False
+                        new_state = self.apply_action(self.state_mapping[s], self.action_list[a])
+                        rew = 0
+                        if new_state == None:
+                            new_state = self.state_mapping[s]
+                        if self.is_state_valid(new_state) == False:
+                            new_state = self.state_mapping[s]
+                            done = True
+                        if new_state == self.goal_state:
+                            rew = 100
+                            done = True
+                        li.append((1, self.inverse_mapping[new_state], rew, done))
+                    else:
+                        for b in [(a, 1-noise), (random.choice(range(6)), noise)]:
+                            a, prob = b[0], b[i]
+                            done = False
+                            new_state = self.apply_action(
+                                self.state_mapping[s], self.action_list[a])
+                            rew = 0
+                            if new_state == None:
+                                new_state = self.state_mapping[s]
+                            if self.is_state_valid(new_state) == False:
+                                new_state = self.state_mapping[s]
+                                done = True
+                            if new_state == self.goal_state:
+                                rew = 100
+                                done = True
+                            li.append(
+                                (prob, self.inverse_mapping[new_state], rew, done))
+
+
+
 
 
         self.isd = np.array([self.is_state_valid(self.state_mapping[s])
