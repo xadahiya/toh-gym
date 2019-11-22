@@ -104,7 +104,6 @@ class TohEnv(discrete.DiscreteEnv):
                         if self.is_state_valid(new_state) == False:
                             new_state = self.state_mapping[s]
                             done = True
-                            rew = -10
                         if new_state == self.goal_state:
                             rew = 100
                             done = True
@@ -121,7 +120,6 @@ class TohEnv(discrete.DiscreteEnv):
                                 new_state = self.state_mapping[s]
                             if self.is_state_valid(new_state) == False:
                                 new_state = self.state_mapping[s]
-                                rew = -10
                                 done = True
                             if new_state == self.goal_state:
                                 rew = 100
