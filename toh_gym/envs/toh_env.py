@@ -2,10 +2,6 @@
 # coding: utf-8
 
 # # Tower of Hanoi
-# VI, PI, Q-learning experiments using OpenAI frozen lake environment. This code is based on the my previous work in Udacity deep learning nanodegree
-
-# Tower of hanoi paper
-# https://www.researchgate.net/figure/State-Space-for-the-Three-Disk-Tower-of-Hanoi-Puzzle_fig2_2453845
 import sys
 from contextlib import closing
 
