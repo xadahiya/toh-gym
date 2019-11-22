@@ -8,5 +8,5 @@ pip install -e git+git://github.com/xadahiya/toh-gym#egg=gym-toh-xadahiya
 
 
 ## Steps to use -
-1. Import the environment using `from gym_toh import TohEnv`
+1. Import the environment using `from toh_gym.envs import TohEnv`
 2. Create the environment using `env = TohEnv()`
